@@ -16,7 +16,8 @@ from util.benchmark import MAINCLASSES
 from util.benchmark import JREVERSION
 
 # ANALYSES = ['1o', 'Z-2o', 'E-2o', 'T-2o', '2o', 'Z-3o', 'T-3o', 'E-3o', '3o', '1c', '2c', 'M-2o', '2h', '2t', 'Z-2c', 'M-2c']
-ANALYSES = ['insens', '1o', 'Z-2o', 'E-2o', 'T-2o', '2o', '2t', '1c', 'M-2o', '2h', 'B-2o', '1c', 's-1c', 's-2c', '2c']
+ANALYSES = ['Z-2o', 'E-2o', '2o', 'Z-3o', 'E-3o', '3o']
+# ANALYSES = ['insens', '1o', 'Z-2o', 'E-2o', 'T-2o', '2o', '2t', '1c', 'M-2o', '2h', 'B-2o', '1c', 's-1c', 's-2c', '2c']
 # ANALYSES = ['D-2o', '2o', 'D-2c', 'D-2h', 'D-2ht', '2h', '2t', 't-1c', '1c', 't-2t', 't-2o', 't-2h']
 # for EAGLEOPTIONS
 UNSCALABLE2 = {
@@ -29,9 +30,13 @@ UNSCALABLE2 = {
 # for ZIPPEROPTIONS
 UNSCALABLE = {
     # 'T-3o': ['eclipse', ],
-    'E-3o': ['eclipse', ],
-    'Z-3o': ['eclipse', ],
-    '3o': ['eclipse', ],
+    'E-3o': ['eclipse', 'checkstyle', 'chart', 'bloat', 'xalan', 'findbugs'],
+    '3o': ['eclipse', 'checkstyle', 'chart', 'bloat', 'xalan', 'findbugs'],
+    'E-3o+D': ['eclipse', 'checkstyle',],
+    'Z-3o': ['eclipse', 'checkstyle', 'bloat'],
+    'Z-3o+D': ['eclipse', ],
+    '3o+D': ['eclipse', 'checkstyle', ],
+    '2o': ['eclipse', ],
 }
 
 BASICOPTIONS = ['-Xmx256g', '-timeout=43200', ]
@@ -73,10 +78,9 @@ def runPTA(analysis, bm, OPTIONSTYLE):
         if MODULAR:
             analysisName = analysis + "+M"
     if DEBLOAT:
-        outputFile = os.path.join(OUTPUTPATH, bm + '_' + analysisName + '+D' + '.txt')
-    else:
-        outputFile = os.path.join(OUTPUTPATH, bm + '_' + analysisName + '.txt')
-    if analysis in UNSCALABLE and bm in UNSCALABLE[analysis]:
+        analysisName = analysis + "+D"
+    outputFile = os.path.join(OUTPUTPATH, bm + '_' + analysisName + '.txt')
+    if analysisName in UNSCALABLE and bm in UNSCALABLE[analysisName]:
         print('predicted unscalable. skip this.')
         if not os.path.exists(outputFile):
             with open(outputFile, 'a') as f:

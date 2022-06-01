@@ -37,6 +37,10 @@ public class PTAConfig extends CoreConfig {
         config = null;
     }
 
+    public enum ConchOption {
+        ALL, COND1, COND2, COND3
+    }
+
     public static class PointerAnalysisConfiguration extends CorePTAConfiguration {
         public PTAPattern ptaPattern;
 
@@ -49,7 +53,12 @@ public class PTAConfig extends CoreConfig {
          * If this option is turned on, we will apply context debloating techniques.
          */
         public boolean ctxDebloating = false;
+        /*
+         * a variant of conch, leaked objects must not related to any non-this parameters.
+         * */
+        public boolean ctxEebloating = false;
 
+        public ConchOption conchOpt = ConchOption.ALL;
     }
 
     /*

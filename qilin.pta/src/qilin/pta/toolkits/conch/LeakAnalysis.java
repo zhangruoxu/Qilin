@@ -20,6 +20,7 @@ package qilin.pta.toolkits.conch;
 
 import qilin.core.PTA;
 import qilin.core.pag.*;
+import qilin.pta.PTAConfig;
 import qilin.util.PTAUtils;
 import soot.SootMethod;
 import soot.jimple.Stmt;
@@ -126,7 +127,16 @@ public class LeakAnalysis extends AbstractPAG {
                 if (initState == DFA.State.O) {
                     // report a heap flows out of its containing method.
                     AllocNode sourceHeap = (AllocNode) sourceNode;
-                    result.add(sourceHeap);
+                    if (PTAConfig.v().getPtaConfig().ctxEebloating) {
+                        if (newTargetNode instanceof LocalVarNode lvn) {
+                            Parm var = (Parm) lvn.getVariable();
+                            if (var.isReturn() || var.isThis()) {
+                                result.add(sourceHeap);
+                            }
+                        }
+                    } else {
+                        result.add(sourceHeap);
+                    }
                     SootMethod containingMethod = sourceHeap.getMethod();
                     Iterator<Edge> it = callGraph.edgesInto(containingMethod);
                     while (it.hasNext()) {

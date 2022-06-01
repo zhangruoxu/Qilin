@@ -79,6 +79,8 @@ public class PTAOption extends Options {
         // a specific PTA's configuration
         addOption("tc", "turnerconfig", "[DEFAULT, PHASE_ONE, PHASE_TWO]", "Run Turner in the given setting (default value: DEFAULT)");
         addOption("cd", "ctxdebloat", "Enable context debloating optimization (default value: false)");
+        addOption("ce", "ctxeebloat", "Enable the variant version of context debloating optimazation (default value: false)");
+        addOption("co", "conchoption", "ALL|COND1|COND2|COND3", "Options for determining Conch mode, default: ALL");
         addOption("tmd", "modular", "Enable Turner to run modularly (default value: false)");
 
         // others
@@ -134,6 +136,13 @@ public class PTAOption extends Options {
         }
         if (cmd.hasOption("ctxdebloat")) {
             PTAConfig.v().getPtaConfig().ctxDebloating = true;
+        }
+        if (cmd.hasOption("ctxeebloat")) {
+            PTAConfig.v().getPtaConfig().ctxDebloating = true;
+            PTAConfig.v().getPtaConfig().ctxEebloating = true;
+        }
+        if (cmd.hasOption("conchoption")) {
+            PTAConfig.v().getPtaConfig().conchOpt = PTAConfig.ConchOption.valueOf(cmd.getOptionValue("conchoption"));
         }
         if (cmd.hasOption("preciseexceptions")) {
             PTAConfig.v().getPtaConfig().preciseExceptions = true;

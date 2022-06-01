@@ -78,7 +78,16 @@ def runPTA(analysis, bm, OPTIONSTYLE):
         if MODULAR:
             analysisName = analysis + "+M"
     if DEBLOAT:
-        analysisName = analysis + "+D"
+        if CONCH_OPTION == 'COND1':
+            analysisName = analysis + '+DP1'
+        elif CONCH_OPTION == 'COND2':
+            analysisName = analysis + '+DP2'
+        elif CONCH_OPTION == 'COND3':
+            analysisName = analysis + '+DP3'
+        else:
+            analysisName = analysis + '+D'
+    elif EEBLOAT:
+        analysisName = analysis + '+E'
     outputFile = os.path.join(OUTPUTPATH, bm + '_' + analysisName + '.txt')
     if analysisName in UNSCALABLE and bm in UNSCALABLE[analysisName]:
         print('predicted unscalable. skip this.')
@@ -92,6 +101,9 @@ def runPTA(analysis, bm, OPTIONSTYLE):
         cmd += ' -dumpstats '
     if DEBLOAT:
         cmd += ' -cd '
+        cmd += (' -co=' + CONCH_OPTION)
+    if EEBLOAT:
+        cmd += ' -ce'
     if not PRINT:
         if os.path.exists(outputFile):
             print('old result found. skip this.')
@@ -106,6 +118,8 @@ OPTIONMESSAGE = 'The valid OPTIONs are:\n' \
                 + option('-print', 'print the analyses results on screen.') \
                 + option('-clean', 'remove previous outputs.') \
                 + option('-cd', 'enable context debloating.') \
+                + option('-ce', 'enable a variant of context debloating.') \
+                + option('-co=<ALL|COND1|COND2|COND3>', 'only valid when -cd option is used. Select conch options, default is ALL.') \
                 + option('-dump', 'dump statistics into files.') \
                 + option('<PTA>', 'specify pointer analysis.') \
                 + option('<Benchmark>', 'specify benchmark.') \
@@ -123,6 +137,8 @@ PRINT = False
 PREONLY = False
 MODULAR = False
 DEBLOAT = False
+EEBLOAT = False
+CONCH_OPTION = 'ALL'
 OPTIONSTYLE = 'zipper'
 DACAPO = '2006'
 
@@ -141,6 +157,8 @@ if __name__ == '__main__':
         MODULAR = True
     if "-cd" in sys.argv:
         DEBLOAT = True
+    if "-ce" in sys.argv:
+        EEBLOAT = True
     if "-dump" in sys.argv:
         DUMP = True
 
@@ -157,6 +175,8 @@ if __name__ == '__main__':
         elif arg.startswith('-OS='):
             OPTIONSTYLE = arg[len('-OS='):]
             print(OPTIONSTYLE)
+        elif arg.startswith('-co='):
+            CONCH_OPTION = arg[len('-co='):]
 
     if "-all" in sys.argv:
         if len(benchmarks) == 0:

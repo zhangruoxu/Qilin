@@ -23,6 +23,7 @@ import qilin.core.builder.MethodNodeFactory;
 import qilin.core.pag.*;
 import qilin.core.sets.P2SetVisitor;
 import qilin.core.sets.PointsToSetInternal;
+import qilin.pta.PTAConfig;
 import qilin.util.PTAUtils;
 import qilin.util.Pair;
 import soot.SootMethod;
@@ -269,7 +270,72 @@ public class Conch extends AbstractConch {
         return false;
     }
 
-    public void runClassifier() {
+    private Set<AllocNode> preprocess() {
+        Collection<AllocNode> allHeaps = pag.getAllocNodes();
+        /*
+         * pre-process.
+         * Those heaps usually are assigned empty context in a tradition pointer analysis.
+         * Classify them to be CS or CI does not affect the efficiency of pointer analysis.
+         * Thus, we handle them in the pre-process.
+         */
+        Set<AllocNode> remainToSolve = new HashSet<>();
+        allHeaps.forEach(heap -> {
+            if (heap.getMethod() == null
+                    || heap instanceof ConstantNode
+                    || PTAUtils.isEmptyArray(heap)
+                    || PTAUtils.isOfPrimitiveBaseType(heap)) {
+                ciHeaps.add(heap);
+            } else {
+                SootMethod mthd = heap.getMethod();
+                if (mthd.isStaticInitializer()) {
+                    ciHeaps.add(heap);
+                } else {
+                    remainToSolve.add(heap);
+                }
+            }
+        });
+        return remainToSolve;
+    }
+
+    private void runConchP2Only() {
+        Set<AllocNode> remainToSolve = preprocess();
+        remainToSolve.forEach(heap -> {
+            if (!this.mfg.isLeakObject(heap)) {
+                ciHeaps.add(heap);
+            } else {
+                csHeaps.add(heap);
+            }
+        });
+    }
+
+    private void runConchP1Only() {
+        Set<AllocNode> remainToSolve = preprocess();
+        remainToSolve.forEach(heap -> {
+            if (!hasInstanceFieldWithStoreLoad(heap)) {
+                ciHeaps.add(heap);
+            } else {
+                csHeaps.add(heap);
+            }
+        });
+    }
+
+    private void runConchP3Only() {
+        Set<AllocNode> remainToSolve = preprocess();
+        Set<AllocNode> unknownyet = new HashSet<>();
+        remainToSolve.forEach(heap -> {
+            Trilean condExtra = checkHeap(heap);
+            if (condExtra == Trilean.TRUE) {
+                csHeaps.add(heap);
+            } else if (condExtra == Trilean.FALSE) {
+                ciHeaps.add(heap);
+            } else {
+                unknownyet.add(heap);
+            }
+        });
+        classifyForRemain(unknownyet);
+    }
+
+    private void runConchAll() {
         Collection<AllocNode> allHeaps = pag.getAllocNodes();
         int heapCnt = allHeaps.size();
         int[] condACnt = new int[1];
@@ -328,9 +394,23 @@ public class Conch extends AbstractConch {
         // stat
         System.out.println("#Heaps:" + heapCnt);
         System.out.println("#CondA:" + condACnt[0]);
+    }
+
+    public void runClassifier() {
+        PTAConfig.ConchOption conchOpt = PTAConfig.v().getPtaConfig().conchOpt;
+        if (conchOpt == PTAConfig.ConchOption.COND1) {
+            runConchP1Only();
+        } else if (conchOpt == PTAConfig.ConchOption.COND2) {
+            runConchP2Only();
+        } else if (conchOpt == PTAConfig.ConchOption.COND3) {
+            runConchP3Only();
+        } else {
+            runConchAll();
+        }
         System.out.println("#CS:" + csHeaps.size());
         System.out.println("#CI:" + ciHeaps.size());
     }
+
 
     private void classifyForRemain(Set<AllocNode> unknownyet) {
         CSDG csdg = new CSDG();

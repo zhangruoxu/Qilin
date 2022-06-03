@@ -16,6 +16,26 @@ def checkJavaVersion():
         print('Error: JRE version does not meet the minimum requirement, i.e., >= 16')
         exit()
 
+# compute speedups over the baseline for each benchmark.
+def computeSpeedUp(ko, xko):
+    mret = 1.0
+    if ko.analysisCompleted() and xko.analysisCompleted():
+        tko = float(ko.analysisTime)
+        txko = float(xko.analysisTime)
+        mret = tko / txko
+    elif ko.analysisCompleted():
+        tko = float(ko.analysisTime)
+        txko = 43200.0 # 12 hours in seconds.
+        mret = tko / txko
+    elif xko.analysisCompleted():
+        tko = 43200.0
+        txko = float(xko.analysisTime)
+        mret = tko / txko
+    return mret
+
+def toSpeedUpStr(val):
+    return '%.1fx' % val
+
 def checkConsistency(pta1, pta2):
     if pta1.app != pta2.app or pta1.analysisName != pta2.analysisName or \
             pta1.mayFailCasts != pta2.mayFailCasts or \
@@ -48,9 +68,9 @@ def merge(pta1, pta2, verbose):
 # given a run, build such kinds of a map: Map<APPName, Map<analysisName, PtaOutput>>
 def buildApp2Tool2PtaOutputMap(run):
     ret = {}
-    app2ptas = Util.classifyByAppName(run)
+    app2ptas = classifyByAppName(run)
     for app in app2ptas:
-        ret[app] = Util.buildAnalysisNameToObjMap(app2ptas[app])
+        ret[app] = buildAnalysisNameToObjMap(app2ptas[app])
     return ret
 
 

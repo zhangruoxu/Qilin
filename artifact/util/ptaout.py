@@ -96,9 +96,9 @@ class PTAOutput(object):
             if '#Field CS Pointer-to Relation:' in ln:
                 self.csFPts = int(ln[ln.find(':') + 1:].strip())
             # only for zipper, eagle, turner
-            if 'Select time:' in ln:
+            if 'Zipper elapsed time:' in ln or 'pre-analysis elapsed time:' in ln:
                 self.preAnalysisTime = ln[ln.find(':') + 1: -1]
-            if 'Spark time:' in ln:
+            if 'Spark elapsed time:' in ln:
                 self.sparkTime = ln[ln.find(':') + 1: -1]
             if '#Node:' in ln:
                 self.graphNode = ln[ln.find(':') + 1:]
@@ -114,13 +114,13 @@ class PTAOutput(object):
             if '#Edge2:' in ln:
                 self.graphEdge2 = ln[ln.find(':') + 1:]
             # only for conch
-            if 'Context debloating time:' in ln:
+            if 'Conch elapsed time:' in ln:
                 self.conchTime = ln[ln.find(':') + 1: -1]
             if '#CI:' in ln:
                 self.conchCI = int(ln[ln.find(':') + 1: -1])
             if '#CS:' in ln:
                 self.conchCS = int(ln[ln.find(':') + 1: -1])
-            if '#Avg Context per Merthod:' in ln:
+            if '#Avg Context per Method:' in ln:
                 self.avgctx = float(ln[ln.find(':') + 1:].strip())
             # only for turner
             if '#CIByOCG:' in ln:

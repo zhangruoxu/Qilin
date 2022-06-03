@@ -51,4 +51,11 @@ TOOLNAMEMAP = {
     'T-2o-man': 'T-2o-man',
     'ml-e-2o': 'method-level-e-2o',
     'ml-hp-2o': 'method-level-p-2o',
+
+    '2o+E': '2OBJ+E',
+    'Z-2o+E': 'Z2OBJ+E',
+    'E-2o+E': 'E2OBJ+E',
+    '3o+E': '3OBJ+E',
+    'Z-3o+E': 'Z3OBJ+E',
+    'E-3o+E': 'E3OBJ+E',
 }

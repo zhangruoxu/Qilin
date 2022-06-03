@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-BENCHMARKS = ['antlr', 'bloat', 'chart', 'eclipse', 'fop', 'luindex', 'lusearch', 'pmd', 'xalan', 'checkstyle', 'JPC',
+BENCHMARKS = ['antlr', 'bloat', 'chart', 'eclipse', 'fop', 'luindex', 'lusearch', 'pmd', 'hsqldb', 'xalan', 'checkstyle', 'JPC',
               'findbugs']
 
 BENCHMARKS2018 = ['avrora', 'batik', 'eclipse2018', 'fop2018', 'h2', 'jython', 'luindex2018', 'lusearch2018', 'pmd2018', 'sunflow', 'tomcat',
@@ -15,6 +15,7 @@ MAINCLASSES = {
     'luindex': 'dacapo.luindex.Main',
     'lusearch': 'dacapo.lusearch.Main',
     'pmd': 'dacapo.pmd.Main',
+    'hsqldb': 'dacapo.hsqldb.Main',
     'xalan': 'dacapo.xalan.Main',
     'checkstyle': 'com.puppycrawl.tools.checkstyle.Main',
     'findbugs': 'edu.umd.cs.findbugs.FindBugs',
@@ -46,6 +47,7 @@ APPPATH = {
     'luindex': 'benchmarks/dacapo2006/luindex.jar',
     'lusearch': 'benchmarks/dacapo2006/lusearch.jar',
     'pmd': 'benchmarks/dacapo2006/pmd.jar',
+    'hsqldb': 'benchmarks/dacapo2006/hsqldb.jar',
     'xalan': 'benchmarks/dacapo2006/xalan.jar',
     'checkstyle': 'benchmarks/applications/checkstyle/checkstyle-5.7-all.jar',
     'findbugs': 'benchmarks/applications/findbugs/findbugs.jar',
@@ -76,6 +78,7 @@ LIBPATH = {
     'luindex': 'benchmarks/dacapo2006/luindex-deps.jar',
     'lusearch': 'benchmarks/dacapo2006/lusearch-deps.jar',
     'pmd': 'benchmarks/dacapo2006/pmd-deps.jar',
+    'hsqldb': 'benchmarks/dacapo2006/hsqldb-deps.jar',
     'xalan': 'benchmarks/dacapo2006/xalan-deps.jar',
     'checkstyle': 'benchmarks/applications/checkstyle/',
     'findbugs': 'benchmarks/applications/findbugs/',
@@ -105,6 +108,7 @@ TAMIFLEXLOG = {
     'luindex': 'benchmarks/dacapo2006/luindex-refl.log',
     'lusearch': 'benchmarks/dacapo2006/lusearch-refl.log',
     'pmd': 'benchmarks/dacapo2006/pmd-refl.log',
+    'hsqldb': 'benchmarks/dacapo2006/hsqldb-refl.log',
     'xalan': 'benchmarks/dacapo2006/xalan-refl.log',
     'checkstyle': 'benchmarks/applications/checkstyle/checkstyle-refl.log',
     'findbugs': 'benchmarks/applications/findbugs/findbugs-refl.log',
@@ -136,6 +140,7 @@ JREVERSION = {
     'luindex': 'jre1.6.0_45',
     'lusearch': 'jre1.6.0_45',
     'pmd': 'jre1.6.0_45',
+    'hsqldb': 'jre1.6.0_45',
     'xalan': 'jre1.6.0_45',
     'checkstyle': 'jre1.6.0_45',
     'findbugs': 'jre1.6.0_45',

@@ -33,10 +33,13 @@ UNSCALABLE = {
     'E-3o': ['eclipse', 'checkstyle', 'chart', 'bloat', 'xalan', 'findbugs'],
     '3o': ['eclipse', 'checkstyle', 'chart', 'bloat', 'xalan', 'findbugs'],
     'E-3o+D': ['eclipse', 'checkstyle',],
-    'Z-3o': ['eclipse', 'checkstyle', 'bloat'],
-    'Z-3o+D': ['eclipse', ],
+    'E-3o+E': ['eclipse', 'checkstyle',],
+    'Z-3o': ['eclipse', 'checkstyle', ],
+    'Z-3o+D': ['eclipse', 'checkstyle',],
+    'Z-3o+E': ['eclipse', 'checkstyle',],
     '3o+D': ['eclipse', 'checkstyle', ],
-    '2o': ['eclipse', ],
+    '3o+E': ['eclipse', 'checkstyle', ],
+    '2o': ['eclipse', 'checkstyle', ],
 }
 
 BASICOPTIONS = ['-Xmx256g', '-timeout=43200', ]
